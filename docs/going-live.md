@@ -8,14 +8,15 @@ Before going live, make sure you have read the page about [organizations.md](org
 
 Replace API keys with the more secure OAuth authentication to go live with your application. Please follow these steps:
 
-1. Your integration needs to be whitelisted by the Request Finance team; get in touch [here](mailto:support@request.finance) or via the Intercom chat. Be sure to mention the email of the account that will call the API. We advise setting up an account just for the integration, an account that does not send or receive invoices, with a strong password that can be archived safely.
-2.  Create an app in your Request Finance account on the ["Developers" menu](https://app.request.finance/developers/apps).
+1. If you intend to act on your users' behalf, we advise setting up an account just for the integration, one that does not send or receive invoices, with a strong password that can be archived safely. (more info in 4.1)
+2. You need to be authorized to access the Apps section, reach out to us with the integration account's email: [here](mailto:support@request.finance) or via the Intercom chat.
+3.  Create an app in your Request Finance account on the ["Developers" menu](https://app.request.finance/developers/apps).
 
     <figure><img src=".gitbook/assets/image (2).png" alt=""><figcaption></figcaption></figure>
-3. Retrieve the access and refresh tokens from the provided Client Secret and Client ID:
+4. Retrieve the access and refresh tokens from the provided Client Secret and Client ID:
    1. If you act on your users' behalf (ex: you are reading your users' invoices), follow the [Authorization Code Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow). You can use any OAuth2 or OpenID-compatible library to do the heavy lifting. Auth0 also provides its [own libraries here](https://auth0.com/docs/quickstart/webapp); choose any package corresponding to your language under "Regular Web App." For reference, we developed two implementation examples, one using NextJS and one using ExpressJS, available on this [demo repository](https://github.com/RequestFinance/demo-api).
    2. If you act on your account's behalf (ex: you are sending invoices from your account to external users), you will need to follow the [Client Credentials Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/client-credentials-flow). Reach out to us first to activate this flow. Note that you can only use one type of OAuth flow per app. You can find an example of how to implement it [here](https://auth0.com/docs/get-started/authentication-and-authorization-flow/client-credentials-flow/call-your-api-using-the-client-credentials-flow#example-post-to-token-url). This flow only contains an access token (no refresh token), so you don't need to use the `offline_access` scope in the next step.
-4.  To configure the OAuth connection, you need to use the following parameters:
+5.  To configure the OAuth connection, you need to use the following parameters:
 
     ```
     URL: https://auth.request.finance
@@ -24,7 +25,7 @@ Replace API keys with the more secure OAuth authentication to go live with your 
     ```
 
     Other scopes are also available, like `user:read`, see [#list-organizations-the-user-belongs-to](organizations.md#list-organizations-the-user-belongs-to "mention").
-5. Save the access token and, in case of Authorization Code Flow, the refresh token too. Authenticate your API calls using the access token and reuse it until it expires (24 hours). After it expires, use the refresh token to ask for a new access token, or, in the case of Client Credential Flow, use your app secret to ask for a new access token. Here is an example of how to use the access token with NodeJS. Notice the mandatory `X-Network` header. Its values are either `test` or `live`.
+6. Save the access token and, in case of Authorization Code Flow, the refresh token too. Authenticate your API calls using the access token and reuse it until it expires (24 hours). After it expires, use the refresh token to ask for a new access token, or, in the case of Client Credential Flow, use your app secret to ask for a new access token. Here is an example of how to use the access token with NodeJS. Notice the mandatory `X-Network` header. Its values are either `test` or `live`.
 
 {% code fullWidth="false" %}
 ```json
