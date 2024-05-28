@@ -10,132 +10,42 @@ The Request Network protocol is all about creating payment requests. They are st
 
 ## Creating an Off-Chain Invoice
 
-{% swagger method="post" path="/invoices" baseUrl="https://api.request.finance" summary="Creates an off-chain invoice for the account" %}
-{% swagger-description %}
+## Creates an off-chain invoice for the account
 
-{% endswagger-description %}
+<mark style="color:green;">`POST`</mark> `https://api.request.finance/invoices`
 
-{% swagger-parameter in="body" name="meta" type="Request Network JSON Schema" %}
-Format of the underlying request. Refer to the [Request Network protocol documentation](https://github.com/RequestNetwork/requestNetwork/tree/master/packages/data-format#available-json-schema) for all possible values.\
-\
-Default value:\
-`{`
+#### Request Body
 
-`format: "rnf_invoice",`
+| Name                                                     | Type                        | Description                                                                                                                                                                                                                                                                                                                                                                                          |
+| -------------------------------------------------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| meta                                                     | Request Network JSON Schema | <p>Format of the underlying request. Refer to the <a href="https://github.com/RequestNetwork/requestNetwork/tree/master/packages/data-format#available-json-schema">Request Network protocol documentation</a> for all possible values.<br><br>Default value:<br><code>{</code></p><p><code>format: "rnf_invoice",</code></p><p><code>version: "0.0.3",</code></p><p><code>}</code></p>              |
+| creationDate                                             | String                      | <p>ISO-8601 representation of the invoice’s creation date.<br><br>Default value:<br>Current date</p>                                                                                                                                                                                                                                                                                                 |
+| invoiceItems.currency<mark style="color:red;">\*</mark>  | String                      | Currency code in which the invoice is denominated. For example, invoices can be denominated in USD, but buyers can pay in crypto.                                                                                                                                                                                                                                                                    |
+| invoiceItems.name                                        | String                      | Name of the product/service for which the invoice is created.                                                                                                                                                                                                                                                                                                                                        |
+| invoiceItems.quantity<mark style="color:red;">\*</mark>  | Decimal                     | Quantity of the product/service that was provided.                                                                                                                                                                                                                                                                                                                                                   |
+| invoiceItems.tax.type                                    | String                      | <p>Can be “fixed” or “percentage”. Required if tax.amount is sent.<br><br>Default value:<br><code>fixed</code></p>                                                                                                                                                                                                                                                                                   |
+| invoiceItems.tax.amount                                  | Decimal                     | <p>Amount of the tax. Required if tax.type is sent.<br><br>Default value:<br><code>0</code></p>                                                                                                                                                                                                                                                                                                      |
+| invoiceItems.unitPrice<mark style="color:red;">\*</mark> | Integer                     | Price of the product/service, excl. taxes.                                                                                                                                                                                                                                                                                                                                                           |
+| invoiceNumber<mark style="color:red;">\*</mark>          | String                      | Invoice number. Has to be unique for each invoice.                                                                                                                                                                                                                                                                                                                                                   |
+| buyerInfo.businessName                                   | String                      | Business name of the buyer (the customer).                                                                                                                                                                                                                                                                                                                                                           |
+| buyerInfo.address.streetAddress                          | String                      | Street, house, apartment of the buyer.                                                                                                                                                                                                                                                                                                                                                               |
+| buyerInfo.address.extendedAddress                        | String                      | Extended details on the address of the buyer.                                                                                                                                                                                                                                                                                                                                                        |
+| buyerInfo.address.city.postalCode                        | String                      | Post code of the buyer.                                                                                                                                                                                                                                                                                                                                                                              |
+| buyerInfo.address.region                                 | String                      | Region of the buyer (e.g. “California”).                                                                                                                                                                                                                                                                                                                                                             |
+| buyerInfo.address.country                                | String                      | Two character ISO 3166-1 country code of the buyer.                                                                                                                                                                                                                                                                                                                                                  |
+| buyerInfo.email<mark style="color:red;">\*</mark>        | String                      | Email of the buyer.                                                                                                                                                                                                                                                                                                                                                                                  |
+| buyerInfo.firstName                                      | String                      | First name (incl. middle names) of the buyer.                                                                                                                                                                                                                                                                                                                                                        |
+| buyerInfo.lastName                                       | String                      | Last name of the buyer.                                                                                                                                                                                                                                                                                                                                                                              |
+| buyerInfo.taxRegistration                                | String                      | Tax registration number of the buyer.                                                                                                                                                                                                                                                                                                                                                                |
+| paymentTerms.dueDate                                     | String                      | ISO-8601 due date of the invoice. Last date the buyer can pay.                                                                                                                                                                                                                                                                                                                                       |
+| paymentAddress<mark style="color:red;">\*</mark>         | String                      | Address which will receive the payment.                                                                                                                                                                                                                                                                                                                                                              |
+| paymentCurrency<mark style="color:red;">\*</mark>        | String                      | Currency in which the invoice can be paid. Please review our [Currency API](https://api.request.finance/currency/list/invoicing) for a list of available currencies.                                                                                                                                                                                                                                 |
+| note                                                     | String                      | An optionnal descriptive note.                                                                                                                                                                                                                                                                                                                                                                       |
+| tags                                                     | Array of strings            | One or multiple tags for an invoice.                                                                                                                                                                                                                                                                                                                                                                 |
+| recurringRule                                            | String                      | <p>Used to create a recurring invoice. Input as defined by the <a href="https://www.rfc-editor.org/rfc/rfc5545">ical RFC</a>. Recommended tool: <a href="https://jakubroztocil.github.io/rrule/">https://jakubroztocil.github.io/rrule/</a>.<br><br>Example:</p><p>DTSTART:20230314T085800Z RRULE:FREQ=MONTHLY;INTERVAL=1<br><br>Monthly on the 14th of each month, starting 14th of March 2023.</p> |
 
-`version: "0.0.3",`
-
-`}`
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="creationDate" type="String" %}
-ISO-8601 representation of the invoice’s creation date.\
-\
-Default value:\
-Current date
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceItems.currency" required="true" type="String" %}
-Currency code in which the invoice is denominated. For example, invoices can be denominated in USD, but buyers can pay in crypto.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceItems.name" type="String" %}
-Name of the product/service for which the invoice is created.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceItems.quantity" type="Decimal" required="true" %}
-Quantity of the product/service that was provided.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceItems.tax.type" type="String" %}
-Can be “fixed” or “percentage”. Required if tax.amount is sent.\
-\
-Default value:\
-`fixed`
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceItems.tax.amount" type="Decimal" %}
-Amount of the tax. Required if tax.type is sent.\
-\
-Default value:\
-`0`
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceItems.unitPrice" type="Integer" required="true" %}
-Price of the product/service, excl. taxes.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceNumber" type="String" required="true" %}
-Invoice number. Has to be unique for each invoice.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="buyerInfo.businessName" type="String" %}
-Business name of the buyer (the customer).
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="buyerInfo.address.streetAddress" type="String" %}
-Street, house, apartment of the buyer.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="buyerInfo.address.extendedAddress" type="String" %}
-Extended details on the address of the buyer.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="buyerInfo.address.city.postalCode" type="String" %}
-Post code of the buyer.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="buyerInfo.address.region" type="String" %}
-Region of the buyer (e.g. “California”).
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="buyerInfo.address.country" type="String" %}
-Two character ISO 3166-1 country code of the buyer.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="buyerInfo.email" type="String" required="true" %}
-Email of the buyer.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="buyerInfo.firstName" type="String" %}
-First name (incl. middle names) of the buyer.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="buyerInfo.lastName" type="String" %}
-Last name of the buyer.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="buyerInfo.taxRegistration" type="String" %}
-Tax registration number of the buyer.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="paymentTerms.dueDate" required="false" type="String" %}
-ISO-8601 due date of the invoice. Last date the buyer can pay.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="paymentAddress" type="String" required="true" %}
-Address which will receive the payment.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="paymentCurrency" required="true" type="String" %}
-Currency in which the invoice can be paid. Please review our [Currency API](https://api.request.finance/currency/list/invoicing) for a list of available currencies.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="tags" type="Array of strings" %}
-One or multiple tags for an invoice.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="recurringRule" type="String" %}
-Used to create a recurring invoice. Input as defined by the [ical RFC](https://www.rfc-editor.org/rfc/rfc5545). Recommended tool: [https://jakubroztocil.github.io/rrule/](https://jakubroztocil.github.io/rrule/). \
-\
-Example:&#x20;
-
-DTSTART:20230314T085800Z RRULE:FREQ=MONTHLY;INTERVAL=1\
-\
-Monthly on the 14th of each month, starting 14th of March 2023.&#x20;
-{% endswagger-parameter %}
-
-{% swagger-response status="201: Created" description="Off-chain invoice successfully created" %}
+{% tabs %}
+{% tab title="201: Created Off-chain invoice successfully created" %}
 ```json
 {
     "id": "63f2f5a7f00a45f276585b27",
@@ -226,8 +136,8 @@ Monthly on the 14th of each month, starting 14th of March 2023.&#x20;
     ]
 }
 ```
-{% endswagger-response %}
-{% endswagger %}
+{% endtab %}
+{% endtabs %}
 
 **Example Request**
 
@@ -287,16 +197,18 @@ In the JSON response, you will get an `id` field. Please save it in a variable o
 
 To make an invoice payable, it must be converted to an on-chain request. Once the invoice is created, convert it into an on-chain request using the endpoint below. Replace `[id]` with the ID of the invoice you saved previously. You don’t need to pass anything in the request body.
 
-{% swagger method="post" path="/invoices/[id]" baseUrl="https://api.request.finance" summary="Converts off-chain invoice into on-chain request" %}
-{% swagger-description %}
+## Converts off-chain invoice into on-chain request
 
-{% endswagger-description %}
+<mark style="color:green;">`POST`</mark> `https://api.request.finance/invoices/[id]`
 
-{% swagger-parameter in="path" name="id" type="String" required="true" %}
-ID of the off-chain invoice
-{% endswagger-parameter %}
+#### Path Parameters
 
-{% swagger-response status="201: Created" description="Request created successfully" %}
+| Name                                 | Type   | Description                 |
+| ------------------------------------ | ------ | --------------------------- |
+| id<mark style="color:red;">\*</mark> | String | ID of the off-chain invoice |
+
+{% tabs %}
+{% tab title="201: Created Request created successfully" %}
 ```json
 {
     "id": "63f2f5a7f00a45f276585b28",
@@ -394,39 +306,43 @@ ID of the off-chain invoice
     ]
 }
 ```
-{% endswagger-response %}
-{% endswagger %}
+{% endtab %}
+{% endtabs %}
 
 In the JSON response, you will get a `requestId` field. This is the ID of the newly created request. Please save it in your database, as you will need it to be informed of when the request has been paid. You may use this value in place of the `invoiceId` for future HTTP requests.
 
 ## Sharing your Invoice and Getting Paid
 
-To get paid by your customer, you need to redirect them to a payment page hosted by Request Finance. You can get the links to the payment page from the response after creating an on-chain request and embed them in your application or an email.&#x20;
+To get paid by your customer, you need to redirect them to a payment page hosted by Request Finance. You can get the links to the payment page from the response after creating an on-chain request and embed them in your application or an email.
 
-Using the `invoiceLinks.signUpAndPay` link, you can redirect your customers to a page that looks like the one below, where they can pay your invoice or sign into their Request Finance account, if they have one.&#x20;
+Using the `invoiceLinks.signUpAndPay` link, you can redirect your customers to a page that looks like the one below, where they can pay your invoice or sign into their Request Finance account, if they have one.
 
 When your customers pay through this page using Request Finance, they can enjoy the convenience and security of our platform, which includes measures to prevent accidental double payments. Additionally, this payment method ensures that the invoice status is automatically updated, simplifying invoice tracking for both you and your customers.
 
 <figure><img src=".gitbook/assets/image (1).png" alt=""><figcaption><p>Sign up &#x26; pay page</p></figcaption></figure>
 
-## &#x20;Fetching an Invoice
+## Fetching an Invoice
 
 To check the status of an invoice and understand if it has been paid, please poll the endpoint below regularly. Replace `[id]` with the `requestId` of the Request (recommended), or the `invoiceId`.
 
-{% swagger method="get" path="/invoices/[id]" baseUrl="https://api.request.finance" summary="Fetch an invoice by its ID" %}
-{% swagger-description %}
+## Fetch an invoice by its ID
 
-{% endswagger-description %}
+<mark style="color:blue;">`GET`</mark> `https://api.request.finance/invoices/[id]`
 
-{% swagger-parameter in="path" name="id" type="String" required="true" %}
-ID of the request or invoice
-{% endswagger-parameter %}
+#### Path Parameters
 
-{% swagger-parameter in="query" name="withLinks=true" type="String" %}
-Includes "Share" and "Payment links" in the response. See [https://docs.request.finance/invoices#sharing-your-invoice-and-getting-paid](https://docs.request.finance/invoices#sharing-your-invoice-and-getting-paid)
-{% endswagger-parameter %}
+| Name                                 | Type   | Description                  |
+| ------------------------------------ | ------ | ---------------------------- |
+| id<mark style="color:red;">\*</mark> | String | ID of the request or invoice |
 
-{% swagger-response status="200: OK" description="" %}
+#### Query Parameters
+
+| Name           | Type   | Description                                                                                                                                                                                                          |
+| -------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| withLinks=true | String | Includes "Share" and "Payment links" in the response. See [https://docs.request.finance/invoices#sharing-your-invoice-and-getting-paid](https://docs.request.finance/invoices#sharing-your-invoice-and-getting-paid) |
+
+{% tabs %}
+{% tab title="200: OK " %}
 ```json
 {
     "id": "63f2f5a7f00a45f276585b28",
@@ -528,8 +444,8 @@ Includes "Share" and "Payment links" in the response. See [https://docs.request.
     ]
 }
 ```
-{% endswagger-response %}
-{% endswagger %}
+{% endtab %}
+{% endtabs %}
 
 You can check the `status` field of the JSON response. The different statuses of an invoice are the following:
 
@@ -550,51 +466,28 @@ When the value matches `rejected` or `canceled` you can also stop polling: it me
 
 ## Listing Invoices
 
-Fetch a list of the user's invoices. Use the `creationDateRange` parameter to filter for invoices created in a date range. Other filters are listed below for your convenience. For example, the `search=tx_hash` filter is a valuable filter to use when presenting the user with a list of invoices associated with a transaction hash.&#x20;
+Fetch a list of the user's invoices. Use the `creationDateRange` parameter to filter for invoices created in a date range. Other filters are listed below for your convenience. For example, the `search=tx_hash` filter is a valuable filter to use when presenting the user with a list of invoices associated with a transaction hash.
 
-{% swagger method="get" path="/invoices" baseUrl="https://api.request.finance" summary="List invoices" %}
-{% swagger-description %}
+## List invoices
 
-{% endswagger-description %}
+<mark style="color:blue;">`GET`</mark> `https://api.request.finance/invoices`
 
-{% swagger-parameter in="query" name="take" type="Integer" %}
-How many items should be returned per page. Default: `25`. Maximum: `100`.
-{% endswagger-parameter %}
+#### Query Parameters
 
-{% swagger-parameter in="query" name="skip" type="Integer" %}
-Use this filter to paginate the results (= skip to a certain page number). Default: `0`.
-{% endswagger-parameter %}
+| Name              | Type      | Description                                                                                                                                                                                                                               |
+| ----------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| take              | Integer   | How many items should be returned per page. Default: `25`. Maximum: `100`.                                                                                                                                                                |
+| skip              | Integer   | Use this filter to paginate the results (= skip to a certain page number). Default: `0`.                                                                                                                                                  |
+| search            | String    | Filter by transaction hash, invoice number, company, and other fields. Example: `&search=0xef...`                                                                                                                                         |
+| status            | String\[] | Filter by invoice status. Available statuses are: `draft`, `pending`, `open`, `paid`, `declaredPaid`, `accepted`, `canceled`, `rejected`, `scheduled`, `overdue`. Example: `&status[]=draft`                                              |
+| creationDateRange | String    | <p>Filter by creation date (ISO 8601 format).<br>Example: <code>&#x26;creationDateRange={"from":"2022-06-24T00:00:00.000Z","to":"2022-08-22T00:00:00.000Z"}</code></p>                                                                    |
+| variant           | String    | Filter by invoice format. Use `rnf_invoice` to filter for invoices and `rnf_salary` to filter for salaries.                                                                                                                               |
+| filterBy          | String    | This filter accepts two values: `sent` or `received` ; returning only invoices sent or received by the user.                                                                                                                              |
+| withLinks         | Boolean   | Include the "Share" and "Payment links" in the response. Default: `false`. See [https://docs.request.finance/invoices#sharing-your-invoice-and-getting-paid](https://docs.request.finance/invoices#sharing-your-invoice-and-getting-paid) |
+| format            | String    | You can set the query parameter`&format=paginated` which will return additional information like the total number of results with and without filters, as well as the number of results per invoice status.                               |
 
-{% swagger-parameter in="query" name="search" type="String" %}
-Filter by transaction hash, invoice number, company, and other fields. Example: `&search=0xef...`&#x20;
-{% endswagger-parameter %}
-
-{% swagger-parameter in="query" name="status" type="String[]" %}
-Filter by invoice status. Available statuses are: `draft`, `pending`, `open`, `paid`, `declaredPaid`, `accepted`, `canceled`, `rejected`, `scheduled`, `overdue`. Example: `&status[]=draft`
-{% endswagger-parameter %}
-
-{% swagger-parameter in="query" name="creationDateRange" type="String" %}
-Filter by creation date (ISO 8601 format). \
-Example: `&creationDateRange={"from":"2022-06-24T00:00:00.000Z","to":"2022-08-22T00:00:00.000Z"}`
-{% endswagger-parameter %}
-
-{% swagger-parameter in="query" name="variant" type="String" %}
-Filter by invoice format. Use `rnf_invoice` to filter for invoices and `rnf_salary` to filter for salaries.&#x20;
-{% endswagger-parameter %}
-
-{% swagger-parameter in="query" name="filterBy" type="String" %}
-This filter accepts two values: `sent` or `received` ; returning only invoices sent or received by the user.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="query" type="Boolean" name="withLinks" %}
-Include the "Share" and "Payment links" in the response. Default: `false`. See [https://docs.request.finance/invoices#sharing-your-invoice-and-getting-paid](https://docs.request.finance/invoices#sharing-your-invoice-and-getting-paid)
-{% endswagger-parameter %}
-
-{% swagger-parameter in="query" name="format" type="String" %}
-You can set the query parameter`&format=paginated` which will return additional information like the total number of results with and without filters, as well as the number of results per invoice status.
-{% endswagger-parameter %}
-
-{% swagger-response status="200: OK" description="" %}
+{% tabs %}
+{% tab title="200: OK " %}
 ```json
 [
     {
@@ -789,57 +682,48 @@ You can set the query parameter`&format=paginated` which will return additional 
     }
 ]
 ```
-{% endswagger-response %}
-{% endswagger %}
+{% endtab %}
+{% endtabs %}
 
 ## Approving/Rejecting/Canceling an Invoice
 
-**Approving**:&#x20;
+**Approving**:
 
-* _As a buyer_, if you received an invoice from one of your supplier/contractors, you can approve it prior to paying. Approved invoices will show up in the ["Approved" tab of the "Pay" menu](https://app.request.finance/pay/bills?f=approved) in the Request Finance app and indicate that the invoice has been accepted by you and is ready for payment. \
-  Only `open` invoices can be approved.&#x20;
+* _As a buyer_, if you received an invoice from one of your supplier/contractors, you can approve it prior to paying. Approved invoices will show up in the ["Approved" tab of the "Pay" menu](https://app.request.finance/pay/bills?f=approved) in the Request Finance app and indicate that the invoice has been accepted by you and is ready for payment.\
+  Only `open` invoices can be approved.
 * _As a seller_, you cannot approve an invoice. Once a buyer approves your invoice, it will show up in the ["Approved" tab of the "Get paid" menu](https://app.request.finance/get-paid/sent?f=approved).
 
 **Rejecting**
 
-* _As a buyer_, if you received an incorrect invoice from one of your supplier/contractors, you can reject it. Rejected invoices will show up in the ["Rejected" tab of the "Pay" menu](https://app.request.finance/pay/bills?f=rejected) in the Request Finance app and indicate that the invoice has been rejected by you and won't be paid. \
-  Only `open` and `accepted` invoices can be rejected.&#x20;
+* _As a buyer_, if you received an incorrect invoice from one of your supplier/contractors, you can reject it. Rejected invoices will show up in the ["Rejected" tab of the "Pay" menu](https://app.request.finance/pay/bills?f=rejected) in the Request Finance app and indicate that the invoice has been rejected by you and won't be paid.\
+  Only `open` and `accepted` invoices can be rejected.
 * _As a seller_, you cannot reject an invoice. Once a buyer rejects your invoice, it will show up in the ["Rejected" tab of the "Get paid" menu](https://app.request.finance/get-paid/sent?f=rejected).
 
-**Canceling**:&#x20;
+**Canceling**:
 
-* _As a seller_, if you issued an invoice to your client but realised a mistake, you can cancel it. Canceled invoices will show in the ["Voided" tab of the "Get paid" menu](https://app.request.finance/get-paid/sent?f=voided). \
+* _As a seller_, if you issued an invoice to your client but realised a mistake, you can cancel it. Canceled invoices will show in the ["Voided" tab of the "Get paid" menu](https://app.request.finance/get-paid/sent?f=voided).\
   Only `open` and `accepted` invoices can be canceled.
 * _As a buyer_, you cannot cancel an invoice. Once a seller cancels an invoice, it will show up in the ["Voided" tab of the "Pay" menu](https://app.request.finance/pay/bills?f=voided).
 
-{% swagger method="post" path="/invoices/[id]/changes" baseUrl="https://api.request.finance" summary="Approve, reject or cancel an invoice" %}
-{% swagger-description %}
+## Approve, reject or cancel an invoice
 
-{% endswagger-description %}
+<mark style="color:green;">`POST`</mark> `https://api.request.finance/invoices/[id]/changes`
 
-{% swagger-parameter in="path" name="id" required="true" type="String" %}
-ID of the invoice
-{% endswagger-parameter %}
+#### Path Parameters
 
-{% swagger-parameter in="body" name="type" required="true" type="String" %}
-The type of change. Use\
-"`accept`" to approve an invoice\
-"`reject`" to reject\
-"`cancel`" to cancel
-{% endswagger-parameter %}
+| Name                                 | Type   | Description       |
+| ------------------------------------ | ------ | ----------------- |
+| id<mark style="color:red;">\*</mark> | String | ID of the invoice |
 
-{% swagger-parameter in="body" name="input.note" type="String" required="true" %}
-Required when rejecting an invoice. Include a rejection reason. \
-\
-Example: \
-\
-`"input":` \
-`{` \
-`note: "Duplicate"` \
-`}`
-{% endswagger-parameter %}
+#### Request Body
 
-{% swagger-response status="200: OK" description="Example response when canceling" %}
+| Name                                         | Type   | Description                                                                                                                                                                               |
+| -------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| type<mark style="color:red;">\*</mark>       | String | <p>The type of change. Use<br>"<code>accept</code>" to approve an invoice<br>"<code>reject</code>" to reject<br>"<code>cancel</code>" to cancel</p>                                       |
+| input.note<mark style="color:red;">\*</mark> | String | <p>Required when rejecting an invoice. Include a rejection reason.<br><br>Example:<br><br><code>"input":</code><br><code>{</code><br><code>note: "Duplicate"</code><br><code>}</code></p> |
+
+{% tabs %}
+{% tab title="200: OK Example response when canceling" %}
 ```json
 {
     "id": "646d68bdf64d4a4839eafe25",
@@ -854,12 +738,5 @@ Example: \
     "sendNotification": false
 }
 ```
-{% endswagger-response %}
-{% endswagger %}
-
-
-
-
-
-
-
+{% endtab %}
+{% endtabs %}
