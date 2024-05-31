@@ -1,5 +1,9 @@
 # Clients
 
+{% hint style="warning" %}
+Contrary to invoices, there is no test environment for clients. Editing client information with a test API key WILL change the client on production.
+{% endhint %}
+
 ## Creating a Client
 
 <mark style="color:green;">`POST`</mark> `https://api.request.finance/clients`
