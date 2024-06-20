@@ -2,7 +2,7 @@
 
 To test the Request Finance API with your application, you can use your “Test” API key when making requests. You can find your “Test” API key in the ["Developer" tab](https://app.request.finance/account/api-keys) in “Settings”.&#x20;
 
-Invoices that you create using your “Test” API key will be persisted on the Goerli Testnet (a testing network for Ethereum). You can see and interact with them in our sandbox: [https://baguette-app.request.finance/](https://baguette-app.request.finance/). Use your existing credentials to access your sandbox account.&#x20;
+Invoices that you create using your “Test” API key will be persisted on the Sepolia Testnet (a testing network for Ethereum). You can see and interact with them in our sandbox: [https://baguette-app.request.finance/](https://baguette-app.request.finance/). Use your existing credentials to access your sandbox account.&#x20;
 
 {% hint style="warning" %}
 API keys are not recommended for a live application and will be deprecated. Follow the steps in [going-live.md](going-live.md "mention") instead.&#x20;
@@ -10,15 +10,15 @@ API keys are not recommended for a live application and will be deprecated. Foll
 
 ## Payments
 
-To test paying an invoice or a payroll payment without spending real tokens, you can use ETH on Goerli Testnet. You can get some using a faucet online and your wallet address.&#x20;
+To test paying an invoice or a payroll payment without spending real tokens, you can use ETH on Sepolia Testnet. You can get some using a faucet online and your wallet address.&#x20;
 
-Make sure to create invoices and payroll payments with ETH on Goerli as a payment method.&#x20;
+Make sure to create invoices and payroll payments with ETH on Sepolia as a payment method.&#x20;
 
 Since the account that issued the invoice cannot be the account that pays the invoice, you will need to create another Request Finance account for the buyer role.
 
 #### **Test ERC20 tokens**&#x20;
 
-To test stablecoin payments on Goerli, we use FAU as a DAI-pegged testnet token. You can mint some FAU tokens at [https://erc20faucet.com/](https://erc20faucet.com/).
+To test stablecoin payments on Sepolia, we use FAU as a DAI-pegged testnet token. You can mint some FAU tokens at [https://erc20faucet.com/](https://erc20faucet.com/).
 
 ## Postman Collection
 
