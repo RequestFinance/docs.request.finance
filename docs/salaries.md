@@ -14,92 +14,32 @@ Note that while the endpoint uses the same attributes, they're handled different
 * A `sellerInfo` object is included that includes information about the employee to be paid.
 * Some information can be omitted. Refer to the example request below.
 
-{% swagger method="post" path="/invoices" baseUrl="https://api.request.finance" summary="Creates an off-chain payroll payment" %}
-{% swagger-description %}
+## Creates an off-chain payroll payment
 
-{% endswagger-description %}
+<mark style="color:green;">`POST`</mark> `https://api.request.finance/invoices`
 
-{% swagger-parameter in="body" name="meta" type="Request Network JSON Schema" %}
-Format of the underlying request. Refer to the [Request Network protocol documentation](https://github.com/RequestNetwork/requestNetwork/tree/master/packages/data-format#available-json-schema) for all possible values.\
-\
-Use\
-`{`
+#### Request Body
 
-`format: "rnf_salary",`
+| Name                                                     | Type                        | Description                                                                                                                                                                                                                                                                                                                                                                                                  |
+| -------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| meta                                                     | Request Network JSON Schema | <p>Format of the underlying request. Refer to the <a href="https://github.com/RequestNetwork/requestNetwork/tree/master/packages/data-format#available-json-schema">Request Network protocol documentation</a> for all possible values.<br><br>Use<br><code>{</code></p><p><code>format: "rnf_salary",</code></p><p><code>version: "0.0.3"</code></p><p><code>}</code></p><p>To create a payroll payment</p> |
+| invoiceNumber<mark style="color:red;">\*</mark>          | String                      | Payment number. Has to be unique for each payroll payment.                                                                                                                                                                                                                                                                                                                                                   |
+| invoiceItems.unitPrice<mark style="color:red;">\*</mark> | Integer                     | Payroll amount.                                                                                                                                                                                                                                                                                                                                                                                              |
+| invoiceItems.quantity<mark style="color:red;">\*</mark>  | Decimal                     | Quantity. Use `1` for payroll payments.                                                                                                                                                                                                                                                                                                                                                                      |
+| invoiceItems.name                                        | String                      | Name of the salary, bonus (e.g. Salary - February 2023).                                                                                                                                                                                                                                                                                                                                                     |
+| invoiceItems.currency<mark style="color:red;">\*</mark>  | String                      | Currency code in which the payroll payment is denominated. For example, payments can be denominated in USD, but the employee can be paid in crypto.                                                                                                                                                                                                                                                          |
+| creationDate                                             | String                      | <p>ISO-8601 representation of the payment’s creation date.<br><br>Default value:<br>Current date</p>                                                                                                                                                                                                                                                                                                         |
+| paymentCurrency<mark style="color:red;">\*</mark>        | String                      | Currency in which the payroll payment can be paid. Please review our [Currency API](https://api.request.finance/currency/list/invoicing) for a list of available currencies.                                                                                                                                                                                                                                 |
+| paymentAddress<mark style="color:red;">\*</mark>         | String                      | Address which will receive the payment.                                                                                                                                                                                                                                                                                                                                                                      |
+| paymentTerms.dueDate                                     | String                      | ISO-8601 due date of the payroll payment.                                                                                                                                                                                                                                                                                                                                                                    |
+| sellerInfo.lastName                                      | String                      | Last name of the employee.                                                                                                                                                                                                                                                                                                                                                                                   |
+| sellerInfo.firstName                                     | String                      | First name (incl. middle names) of the employee.                                                                                                                                                                                                                                                                                                                                                             |
+| sellerInfo.email<mark style="color:red;">\*</mark>       | String                      | Email of the employee who receives the payment.                                                                                                                                                                                                                                                                                                                                                              |
+| recurringRule                                            | String                      | <p>Used to create a recurring payment. Input as defined by the <a href="https://www.rfc-editor.org/rfc/rfc5545">ical RFC</a>. Recommended tool: <a href="https://jakubroztocil.github.io/rrule/">https://jakubroztocil.github.io/rrule/</a>. <br><br>Example: </p><p>DTSTART:20230314T085800Z RRULE:FREQ=MONTHLY;INTERVAL=1<br><br>Monthly on the 14th of each month, starting 14th of March 2023. </p>      |
+| buyerInfo.email<mark style="color:red;">\*</mark>        | String                      | Email of the employer.                                                                                                                                                                                                                                                                                                                                                                                       |
 
-`version: "0.0.3"`
-
-`}`
-
-To create a payroll payment
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="creationDate" type="String" %}
-ISO-8601 representation of the payment’s creation date.\
-\
-Default value:\
-Current date
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceItems.currency" required="true" type="String" %}
-Currency code in which the payroll payment is denominated. For example, payments can be denominated in USD, but the employee can be paid in crypto.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceItems.name" type="String" %}
-Name of the salary, bonus (e.g. Salary - February 2023).
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceItems.quantity" type="Decimal" required="true" %}
-Quantity. Use `1` for payroll payments.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceItems.unitPrice" type="Integer" required="true" %}
-Payroll amount.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="invoiceNumber" type="String" required="true" %}
-Payment number. Has to be unique for each payroll payment.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="buyerInfo.email" required="true" %}
-Email of the employer.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="sellerInfo.email" type="String" required="true" %}
-Email of the employee who receives the payment.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="sellerInfo.firstName" type="String" %}
-First name (incl. middle names) of the employee.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="sellerInfo.lastName" type="String" %}
-Last name of the employee.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="paymentTerms.dueDate" required="false" type="String" %}
-ISO-8601 due date of the payroll payment.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="paymentAddress" type="String" required="true" %}
-Address which will receive the payment.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" name="paymentCurrency" required="true" type="String" %}
-Currency in which the payroll payment can be paid. Please review our [Currency API](https://api.request.finance/currency/list/invoicing) for a list of available currencies.
-{% endswagger-parameter %}
-
-{% swagger-parameter in="body" type="String" name="recurringRule" %}
-Used to create a recurring payment. Input as defined by the [ical RFC](https://www.rfc-editor.org/rfc/rfc5545). Recommended tool: [https://jakubroztocil.github.io/rrule/](https://jakubroztocil.github.io/rrule/). \
-\
-Example:&#x20;
-
-DTSTART:20230314T085800Z RRULE:FREQ=MONTHLY;INTERVAL=1\
-\
-Monthly on the 14th of each month, starting 14th of March 2023.&#x20;
-{% endswagger-parameter %}
-
-{% swagger-response status="201: Created" description="Off-chain payment successfully created" %}
+{% tabs %}
+{% tab title="201: Created Off-chain payment successfully created" %}
 ```json
 {
     "id": "647855dc484f371e737cf593",
@@ -166,8 +106,8 @@ Monthly on the 14th of each month, starting 14th of March 2023.&#x20;
    ]
 }
 ```
-{% endswagger-response %}
-{% endswagger %}
+{% endtab %}
+{% endtabs %}
 
 #### **Example Request**
 

@@ -7,6 +7,7 @@
 * [Payroll](salaries.md)
 * [Organizations](organizations.md)
 * [Clients](clients.md)
+* [Webhooks](webhooks.md)
 * [Going Live](going-live.md)
 * [FAQ](faq.md)
 * [Bug Bounty Program](https://help.request.finance/en/articles/8623679-bug-bounty-program-at-request)
