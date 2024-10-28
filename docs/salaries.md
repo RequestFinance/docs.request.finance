@@ -29,8 +29,7 @@ Note that while the endpoint uses the same attributes, they're handled different
 | invoiceItems.name                                        | String                      | Name of the salary, bonus (e.g. Salary - February 2023).                                                                                                                                                                                                                                                                                                                                                     |
 | invoiceItems.currency<mark style="color:red;">\*</mark>  | String                      | Currency code in which the payroll payment is denominated. For example, payments can be denominated in USD, but the employee can be paid in crypto.                                                                                                                                                                                                                                                          |
 | creationDate                                             | String                      | <p>ISO-8601 representation of the payment’s creation date.<br><br>Default value:<br>Current date</p>                                                                                                                                                                                                                                                                                                         |
-| paymentCurrency<mark style="color:red;">\*</mark>        | String                      | Currency in which the payroll payment can be paid. Please review our [Currency API](https://api.request.finance/currency/list/invoicing) for a list of available currencies.                                                                                                                                                                                                                                 |
-| paymentAddress<mark style="color:red;">\*</mark>         | String                      | Address which will receive the payment.                                                                                                                                                                                                                                                                                                                                                                      |
+| paymentOptions<mark style="color:red;">\*</mark>         | Array of objects            | Payment configuration. Contains the address which will receive the payment and currencies in which the salary can be paid. Please review our [Currency API](https://api.request.finance/currency/list/invoicing) for a list of available currencies.                                                                                                                                                         |
 | paymentTerms.dueDate                                     | String                      | ISO-8601 due date of the payroll payment.                                                                                                                                                                                                                                                                                                                                                                    |
 | sellerInfo.lastName                                      | String                      | Last name of the employee.                                                                                                                                                                                                                                                                                                                                                                                   |
 | sellerInfo.firstName                                     | String                      | First name (incl. middle names) of the employee.                                                                                                                                                                                                                                                                                                                                                             |
@@ -43,7 +42,6 @@ Note that while the endpoint uses the same attributes, they're handled different
 ```json
 {
     "id": "647855dc484f371e737cf593",
-    "paymentCurrency": "USDC-matic",
     "buyerInfo": {
         "email": "joe.bloggs@abc-unicorn.com",
         "userId": "647804be4e8042efbde7a725"
@@ -54,7 +52,6 @@ Note that while the endpoint uses the same attributes, they're handled different
         "lastName": "Dean",
         "userId": "63c4eeed02a7c1bb872cb3a1"
     },
-    "paymentAddress": "0x4886E85E192cdBC81d42D89256a81dAb990CDD74",
     "invoiceItems": [
         {
             "tax": {
@@ -141,8 +138,20 @@ To create a salary payment like this, you would pass the following body with the
   "paymentTerms": {
     "dueDate": "2023-06-01T14:59:59.999Z"
   },
-  "paymentAddress": "0x4886E85E192cdBC81d42D89256a81dAb990CDD74",
-  "paymentCurrency": "USDC-matic",
+  "paymentOptions": [
+        {
+            "type": "wallet",
+            "value": {
+                "currencies": [
+                    "USDC-matic"
+                ],
+                "paymentInformation": {
+                    "paymentAddress": "0x4886E85E192cdBC81d42D89256a81dAb990CDD74",
+                    "chain": "matic"
+                }
+            }
+        }
+    ],
   "recurringRule": "DTSTART:20230601T074619Z\nRRULE:FREQ=MONTHLY;INTERVAL=1;COUNT=3"
 }
 </code></pre>
@@ -168,7 +177,6 @@ To check the status of a salary payment and understand if it has been paid, plea
 ```json
 {
     "id": "647855dc484f371e737cf593",
-    "paymentCurrency": "USDC-matic",
     "buyerInfo": {
         "email": "joe.bloggs@abc-unicorn.com",
         "userId": "647804be4e8042efbde7a735"
@@ -179,7 +187,6 @@ To check the status of a salary payment and understand if it has been paid, plea
         "lastName": "Dean",
         "userId": "63c4eeed02a7c1bb872cb3a1"
     },
-    "paymentAddress": "0x4886E85E192cdBC81d42D89256a81dAb990CDD74",
     "invoiceItems": [
         {
             "tax": {

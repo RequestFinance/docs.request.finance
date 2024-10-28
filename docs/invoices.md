@@ -38,8 +38,7 @@ The Request Network protocol is all about creating payment requests. They are st
 | buyerInfo.lastName                                       | String                      | Last name of the buyer.                                                                                                                                                                                                                                                                                                                                                                              |
 | buyerInfo.taxRegistration                                | String                      | Tax registration number of the buyer.                                                                                                                                                                                                                                                                                                                                                                |
 | paymentTerms.dueDate                                     | String                      | ISO-8601 due date of the invoice. Last date the buyer can pay.                                                                                                                                                                                                                                                                                                                                       |
-| paymentAddress<mark style="color:red;">\*</mark>         | String                      | Address which will receive the payment.                                                                                                                                                                                                                                                                                                                                                              |
-| paymentCurrency<mark style="color:red;">\*</mark>        | String                      | Currency in which the invoice can be paid. Please review our [Currency API](https://api.request.finance/currency/list/invoicing) for a list of available currencies.                                                                                                                                                                                                                                 |
+| paymentOptions<mark style="color:red;">\*</mark>         | Array of objects            | Payment configuration. Contains the address which will receive the payment and currencies in which the invoice can be paid. Please review our [Currency API](https://api.request.finance/currency/list/invoicing) for a list of available currencies.                                                                                                                                                |
 | note                                                     | String                      | An optional descriptive note.                                                                                                                                                                                                                                                                                                                                                                        |
 | tags                                                     | Array of strings            | One or multiple tags for an invoice.                                                                                                                                                                                                                                                                                                                                                                 |
 | recurringRule                                            | String                      | <p>Used to create a recurring invoice. Input as defined by the <a href="https://www.rfc-editor.org/rfc/rfc5545">ical RFC</a>. Recommended tool: <a href="https://jakubroztocil.github.io/rrule/">https://jakubroztocil.github.io/rrule/</a>.<br><br>Example:</p><p>DTSTART:20230314T085800Z RRULE:FREQ=MONTHLY;INTERVAL=1<br><br>Monthly on the 14th of each month, starting 14th of March 2023.</p> |
@@ -49,7 +48,6 @@ The Request Network protocol is all about creating payment requests. They are st
 ```json
 {
     "id": "63f2f5a7f00a45f276585b27",
-    "paymentCurrency": "USDC-matic",
     "buyerInfo": {
         "taxRegistration": "985-80-3313",
         "lastName": "Walton",
@@ -71,7 +69,6 @@ The Request Network protocol is all about creating payment requests. They are st
         },
         "userId": "63c8d2c230d75e750fb449ea"
     },
-    "paymentAddress": "0x4886E85E192cdBC81d42D89256a81dAb990CDD74",
     "invoiceItems": [
         {
             "currency": "USD",
@@ -183,8 +180,20 @@ To create an invoice for this, you would pass the following body with the reques
    "paymentTerms": {
        "dueDate": "2023-01-21T23:59:59.999Z"
    },
-   "paymentAddress": "0x4886E85E192cdBC81d42D89256a81dAb990CDD74",
-   "paymentCurrency": "USDC-matic",
+   "paymentOptions": [
+        {
+            "type": "wallet",
+            "value": {
+                "currencies": [
+                    "USDC-matic"
+                ],
+                "paymentInformation": {
+                    "paymentAddress": "0x4886E85E192cdBC81d42D89256a81dAb990CDD74",
+                    "chain": "matic"
+                }
+            }
+        }
+    ],
    "tags": [
        "my_tag"
    ]
@@ -212,7 +221,6 @@ To make an invoice payable, it must be converted to an on-chain request. Once th
 ```json
 {
     "id": "63f2f5a7f00a45f276585b28",
-    "paymentCurrency": "USDC-matic",
     "buyerInfo": {
         "taxRegistration": "985-80-3313",
         "lastName": "Walton",
@@ -234,7 +242,6 @@ To make an invoice payable, it must be converted to an on-chain request. Once th
         },
         "userId": "63c8d2c230d75e750fb449ea"
     },
-    "paymentAddress": "0x4886E85E192cdBC81d42D89256a81dAb990CDD74",
     "invoiceItems": [
         {
             "currency": "USD",
@@ -346,7 +353,6 @@ To check the status of an invoice and understand if it has been paid, please pol
 ```json
 {
     "id": "63f2f5a7f00a45f276585b28",
-    "paymentCurrency": "USDC-matic",
     "buyerInfo": {
         "taxRegistration": "985-80-3313",
         "lastName": "Walton",
@@ -368,7 +374,6 @@ To check the status of an invoice and understand if it has been paid, please pol
         },
         "userId": "63c8d2c230d75e750fb449ea"
     },
-    "paymentAddress": "0x4886E85E192cdBC81d42D89256a81dAb990CDD74",
     "invoiceItems": [
         {
             "currency": "USD",
@@ -492,7 +497,6 @@ Fetch a list of the user's invoices. Use the `creationDateRange` parameter to fi
 [
     {
         "id": "63f3081d8c008a5de554ca97",
-        "paymentCurrency": "USDC-matic",
         "buyerInfo": {
             "taxRegistration": "985-80-3313",
             "lastName": "Walton",
@@ -514,7 +518,6 @@ Fetch a list of the user's invoices. Use the `creationDateRange` parameter to fi
             },
             "userId": "63c8d2c230d75e750fb449ea"
         },
-        "paymentAddress": "0x4886E85E192cdBC81d42D89256a81dAb990CDD74",
         "invoiceItems": [
             {
                 "currency": "USD",
@@ -583,7 +586,6 @@ Fetch a list of the user's invoices. Use the `creationDateRange` parameter to fi
     },
     {
         "id": "63f2f5a7f00a45f276585b28",
-        "paymentCurrency": "USDC-matic",
         "buyerInfo": {
             "taxRegistration": "985-80-3313",
             "lastName": "Walton",
@@ -605,7 +607,6 @@ Fetch a list of the user's invoices. Use the `creationDateRange` parameter to fi
             },
             "userId": "63c8d2c230d75e750fb449ea"
         },
-        "paymentAddress": "0x4886E85E192cdBC81d42D89256a81dAb990CDD74",
         "invoiceItems": [
             {
                 "currency": "USD",
