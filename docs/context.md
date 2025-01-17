@@ -1,6 +1,6 @@
 # Welcome
 
-The Request Finance API allows you to scale your web3 operations without the complexity of dealing with blockchains and smart contracts.&#x20;
+The Accounts Payable and Receivable API allows you to scale your web3 operations without the complexity of dealing with blockchains and smart contracts.
 
 With the API you can:
 
