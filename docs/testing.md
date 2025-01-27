@@ -18,7 +18,23 @@ Since the account that issued the invoice cannot be the account that pays the in
 
 #### **Test ERC20 tokens**&#x20;
 
-To test stablecoin payments on Sepolia, we use FAU as a DAI-pegged testnet token. You can mint some FAU tokens at [https://erc20faucet.com/](https://erc20faucet.com/).
+To test stablecoin payments on Sepolia, we use `FAU` as a `DAI`-pegged testnet token. You can mint some `FAU` tokens by calling use the `mint` function of the `FAU` smart contract:
+
+* Open the `FAU` contract on Etherscan page: [https://sepolia.etherscan.io/address/0x370de27fdb7d1ff1e1baa7d11c5820a324cf623c#writeContract](https://sepolia.etherscan.io/address/0x370de27fdb7d1ff1e1baa7d11c5820a324cf623c#writeContract)
+* Click on `Connect to Web3` and pick Metamask
+* Metamask will ask you to connect and confirm
+* Open the `4. Mint` section
+
+<figure><img src=".gitbook/assets/image.png" alt=""><figcaption><p><code>mint</code> function of the <code>FAU</code> smart-contract</p></figcaption></figure>
+
+* Fill up the `to (address)` field with the address of your wallet (you can find it on top of your Metamask window)
+* Insert `10000000000000000000000` for the `value (uint256)`. This is equivalent to `10000 FAU` (with 18 decimals after that).
+* Click `Write`, confirm the transaction in Metamask
+
+💡 If you don’t see your `FAU` on Metamask:
+
+* Click on “Don’t see your token? Import tokens”
+* Click on “Add custom token” and paste `FAU` contract address: `0x370de27fdb7d1ff1e1baa7d11c5820a324cf623c`&#x20;
 
 ## Postman Collection
 
