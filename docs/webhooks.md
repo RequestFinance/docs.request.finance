@@ -10,7 +10,7 @@ Webhooks in Request Finance allow you to receive real-time notifications about c
 
 ## Prerequisites
 
-1. **Create an OAuth app:** See [#authentication](going-live.md#authentication "mention")
+1. **Create an OAuth app:** OAuth (Open Authorization) is an open standard for access delegation, commonly used to grant websites or applications limited access to user information without exposing credentials. To create an OAuth app, navigate to [#authentication](going-live.md#authentication "mention")
 2. **Whitelist Your Account**: Before you can use webhooks, you need to be whitelisted for the feature. Contact Request Finance support to request access.
 
 ## Setting Up Webhooks
@@ -21,8 +21,7 @@ Once your account is whitelisted, follow these steps to add your webhook URL and
 
 1. Navigate to the `Settings > Developer > Apps` page in the Request Finance dashboard.
 2. Create or edit your OAuth application.
-3. Enter your webhook URL.
-4. Enter your webhook secret. This secret is used to verify the integrity of the incoming requests.
+3. Enter your webhook URL and a secret key. The secret is used to verify the integrity of incoming requests.
 
 The webhook URL and secret are mandatory for events to be sent to your URL.
 
@@ -30,7 +29,12 @@ The webhook URL and secret are mandatory for events to be sent to your URL.
 
 ### Step 2: Verify Webhook Setup
 
-To ensure that your webhooks are working correctly, you can use testing services like [Webhook.site](https://webhook.site) or [Webhook Test](https://webhook-test.com/). These services allow you to inspect the incoming webhook requests and verify their format.
+To ensure that your webhooks are working correctly, you can use testing services like [Webhook.site](https://webhook.site) or [Beeceptor](https://beeceptor.com/webhook-integration/). These tools act as intermediaries, capturing and displaying incoming requests so you can:
+
+- **Verify Payload Format**: Inspect headers, body (JSON/XML), and query parameters to ensure data aligns with your expectations.
+- **Test Error Handling**: Simulate delayed responses, timeouts, or error status codes (e.g., 4xx/5xx) to see how your system recovers.
+- **Debug in Real Time**: Monitor live traffic without deploying code to production.
+
 
 ## Webhook Events
 
@@ -61,11 +65,13 @@ Depending on the usage of your OAuth application, you will receive events for di
 
 The `event` field can have the following values:
 
-* `create`: When an invoice is created.
-* `accept`: When an invoice is accepted (by the buyer).
-* `cancel`: When an invoice is canceled (by the seller).
-* `reject`: When an invoice is rejected (by the buyer).
-* `paid`: When an invoice is paid.
+| Event Type | Description                                  |
+|------------|----------------------------------------------|
+| create     | When an invoice is created.                   |
+| accept     | When an invoice is accepted (by the buyer).   |
+| cancel     | When an invoice is canceled (by the seller).  |
+| reject     | When an invoice is rejected (by the buyer).   |
+| paid       | When an invoice is paid.                      |
 
 ## Securing Your Webhooks
 
