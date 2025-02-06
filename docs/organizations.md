@@ -14,12 +14,12 @@ The following endpoint retrieves the list of organizations a user belongs to. Th
 **Important**: This endpoint is only available with the OAuth authentication scheme, not API keys. You need to ask for the `user:read` OAuth scope when retrieving a token in order to have access to this endpoint.
 {% endhint %}
 
-{% swagger method="get" path="/users/organizations" baseUrl="https://api.request.finance" summary="List organizations the user belongs to" %}
-{% swagger-description %}
+## List organizations the user belongs to
 
-{% endswagger-description %}
+<mark style="color:blue;">`GET`</mark> `https://api.request.finance/users/organizations`
 
-{% swagger-response status="200: OK" description="" %}
+{% tabs %}
+{% tab title="200: OK " %}
 ```json
 [
   {
@@ -36,8 +36,8 @@ The following endpoint retrieves the list of organizations a user belongs to. Th
   }
 ]
 ```
-{% endswagger-response %}
-{% endswagger %}
+{% endtab %}
+{% endtabs %}
 
 ## Accessing an Organization's Data
 
@@ -58,3 +58,9 @@ X-Organization: 654b9aaefb9eb1ddde2cf85f
 {% hint style="info" %}
 If the user is the owner of the organization, you don't need to add the `X-Organization` header. Their personal account itself constitutes the organization; accessing the user's data is like accessing the organization's data.
 {% endhint %}
+
+When fetching user's data with the `GET /users` endpoint, the `organization` field corresponds to the organization the user is currently logged in with:
+
+* It is always equal to `X-Organization` when the header is set.
+* If the `X-Organization` header is not set, but the user is an owner, then the owned organization is returned.
+* If the `X-Organization` header is not set, and the user does not own an organization, the field is set to `null`.
