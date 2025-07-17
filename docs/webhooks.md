@@ -40,7 +40,7 @@ When an event occurs, Request Finance will send a JSON payload to your webhook U
 {
   "variant": "rnf_invoice", // Other possible values: rnf_salary
   "event": "create", // Other possible values: accept, cancel, reject, paid
-  "timestamp": "2024-07-10T10:00:00Z",
+  "timestamp": 1720605600000, // Unix timestamp in milliseconds
   "invoice": {
     ...
   }
