@@ -40,6 +40,10 @@ fetch("https://api.request.finance/invoices", {
 
 ## Optional: Transactional Emails
 
+{% hint style="info" %}
+Transactional Emails require OAuth authentication as described above.
+{% endhint %}
+
 By default, we don't send transactional notifications for invoices created via API. If your users create invoices through your integration, you probably want issuers to be alerted of new invoices, and other transactional emails to be sent. In such case, please get in touch [here](mailto:support@request.finance) or via the Intercom chat, and share your Client ID with the Request Finance team.
 
 ## Troubleshooting
