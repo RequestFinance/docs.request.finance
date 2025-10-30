@@ -26,7 +26,7 @@ Once your account is whitelisted, follow these steps to add your webhook URL and
 
 The webhook URL and secret are mandatory for events to be sent to your URL.
 
-<figure><img src=".gitbook/assets/image (4).png" alt=""><figcaption><p>Edit your OAuth app, and add the webhook URL and secret</p></figcaption></figure>
+<figure><img src=".gitbook/assets/image (5).png" alt=""><figcaption><p>Edit your OAuth app, and add the webhook URL and secret</p></figcaption></figure>
 
 ### Step 2: Verify Webhook Setup
 
