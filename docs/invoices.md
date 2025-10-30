@@ -457,7 +457,7 @@ You can check the `status` field of the JSON response. The different statuses of
 * `open` – The request associated with the invoice has been created on-chain. The buyer has not yet paid the invoice.
 * `accepted` – The invoice has been approved by the buyer.
 * `declaredPaid` – The buyer declared the invoice as paid. The seller has to confirm before the invoice can move into the paid status. This is necessary for currencies, where the Request Network does not yet support payment detection.
-* `paid` – Final state. The buyer paid the invoice.
+* `paid` – The buyer paid the invoice. Note that the invoice can still move back to `open` if it's marked as unpaid.
 * `canceled` – Final state. The seller canceled the invoice.
 * `rejected` – Final state. The buyer rejected the invoice.
 * `scheduled` – Status for recurring invoices. Indicates that an invoice will be created on a specific date in the future.
@@ -465,9 +465,7 @@ You can check the `status` field of the JSON response. The different statuses of
 
 When creating an on-chain request with the previously described process, you should end up with a pending status while the request is being persisted on-chain (this process is asynchronous), followed by an `open` status once the request is actually created.
 
-You can use the value `paid` to classify the Request as "fulfilled" and stop polling for a new status.
-
-When the value matches `rejected` or `canceled` you can also stop polling: it means that the request has been manually canceled out by the payer or the payee respectively, and thus will not get paid.
+When the value matches `rejected` or `canceled` you can stop polling for a new status: it means that the invoice has been manually canceled by the payer or the payee respectively, and thus will not get paid.
 
 ## Listing Invoices
 
