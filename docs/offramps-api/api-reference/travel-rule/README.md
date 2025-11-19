@@ -10,7 +10,7 @@ To comply with global anti-money laundering (AML) regulations, specifically the 
 
 To ease your users' experience, we use [Sumsub](https://sumsub.com/) to verify ownership of unhosted wallets used for payments. The process ensures the wallet belongs to your user and can be used for payouts. Users only need to verify new wallets once.&#x20;
 
-Whenever an offramp is made, a validation is run whether the wallet requires ownership verification or not. If verification is required, we'll send a webhook (see [Travel Rule webhook](https://docs.request.finance/on-offramps-api/api-reference/webhooks/payment-detail-webhook-1)) with a link you need to expose to your users for them to start the verification process via Sumsub.
+Whenever an offramp is made, a validation is run whether the wallet requires ownership verification or not. If verification is required, we'll send a webhook (see [Travel Rule webhook](./)) with an ID you can use to retrieve the [verification link](retrieving-unhosted-wallet-verification-link.md)
 
 The webhook also notifies you of any status changes in the wallet ownership verification.&#x20;
 
