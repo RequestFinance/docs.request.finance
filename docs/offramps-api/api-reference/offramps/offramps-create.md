@@ -21,9 +21,6 @@ curl https://{{base_url}}/users/USER_ID/quotes/QUOTE_ID/offramps \
             "destination_currency": "usd",
             "rails": "swift",
             "reference": "Payment for Services #1010",
-            "supporting_document_attributes": {
-                "submitted_url": "https://web3accounting.com/invoices/in_378949x.pdf"
-            },
             "metadata": {
                 "custom_key": "custom_value"
             }
@@ -33,8 +30,7 @@ curl https://{{base_url}}/users/USER_ID/quotes/QUOTE_ID/offramps \
             "destination_amount": 1000,
             "destination_currency": "eur",
             "rails": "swift",
-            "reference": "Payment for Services #1011",
-            "supporting_document_attributes": null
+            "reference": "Payment for Services #1011"
         }
     ]
 }' 
@@ -55,16 +51,14 @@ curl https://{{base_url}}/users/USER_ID/quotes/QUOTE_ID/offramps \
 
 #### Request Body
 
-| Name                                                    | Type   | Description                                                                                                                                                                                                                                                                                                                      |
-| ------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| submitted\_url                                          | String | <p>A URL to a hosted document that explains the reason for the transaction, such as an invoice or a payslip. Required if the amount is above 15000 EUR or 10000 USD, or at any amount if the payment rails are <code>swift.</code><br><br>URL must point to the document file itself and not a webpage hosting the document.</p> |
-| payment\_detail\_id<mark style="color:red;">\*</mark>   | UUID   | The ID of the Payment Detail (bank account) where the fiat payment should be made to.                                                                                                                                                                                                                                            |
-| destination\_amount<mark style="color:red;">\*</mark>   | String | The amount in fiat currency that should be delivered to the Payment Detail. The amount must be over the minimum limit of the `destination_currency`.                                                                                                                                                                             |
-| reference                                               | String | The reference message you would like on the fiat payment.                                                                                                                                                                                                                                                                        |
-| supporting\_document\_attributes                        | Object | An object containing a URL to `submitted_url.` Only required if a `submitted_url` is required.                                                                                                                                                                                                                                   |
-| destination\_currency<mark style="color:red;">\*</mark> | String | The currency that should be delivered to the Payment Detail, e.g. `usd, eur`                                                                                                                                                                                                                                                     |
-| rails                                                   | String | Choose between `local,` `swift,`and `wire.` Defaults to `local`. Check what [options](../payment-details/rail-availability.md) are available for your desired currency.                                                                                                                                                          |
-| metadata                                                | Object | An object which can contain a custom key/value pair.                                                                                                                                                                                                                                                                             |
+| Name                                                    | Type   | Description                                                                                                                                                             |
+| ------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| payment\_detail\_id<mark style="color:red;">\*</mark>   | UUID   | The ID of the Payment Detail (bank account) where the fiat payment should be made to.                                                                                   |
+| destination\_amount<mark style="color:red;">\*</mark>   | String | The amount in fiat currency that should be delivered to the Payment Detail. The amount must be over the minimum limit of the `destination_currency`.                    |
+| reference                                               | String | The reference message you would like on the fiat payment.                                                                                                               |
+| destination\_currency<mark style="color:red;">\*</mark> | String | The currency that should be delivered to the Payment Detail, e.g. `usd, eur`                                                                                            |
+| rails                                                   | String | Choose between `local,` `swift,`and `wire.` Defaults to `local`. Check what [options](../payment-details/rail-availability.md) are available for your desired currency. |
+| metadata                                                | Object | An object which can contain a custom key/value pair.                                                                                                                    |
 
 {% tabs %}
 {% tab title="200: OK " %}
@@ -84,10 +78,6 @@ curl https://{{base_url}}/users/USER_ID/quotes/QUOTE_ID/offramps \
          rails: "swift",
          rate: 0.92820,
          fee: 125,
-         supporting_document: {
-            submitted_url: "https://web3accounting.com/invoices/in_378949x.pdf",
-            status: "not_checked"
-         },
          "metadata": {
              "custom_key": "custom_value"
          }
@@ -105,7 +95,6 @@ curl https://{{base_url}}/users/USER_ID/quotes/QUOTE_ID/offramps \
          rails: "local",
          rate: 0.85660,
          fee: 4,
-         supporting_document: null,
          "metadata": {}
       }
    ]
