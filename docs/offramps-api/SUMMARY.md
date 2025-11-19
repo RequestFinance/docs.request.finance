@@ -38,6 +38,7 @@
   * [Offramps#Update](api-reference/offramps/offramps-update.md)
   * [Offramps#Show](api-reference/offramps/offramps-show.md)
   * [Limitations](api-reference/offramps/limitations.md)
+* [Travel Rule](api-reference/travel-rule.md)
 * [Webhooks](api-reference/webhooks/README.md)
   * [KYC Webhook](api-reference/webhooks/kyc-webhook.md)
   * [Offramp Webhook](api-reference/webhooks/offramp-webhook.md)
